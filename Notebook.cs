@@ -121,7 +121,7 @@ namespace Notebook
         {
             foreach (KeyValuePair<int, Note> item in allNotes)
             {
-                Console.WriteLine(item.Value.ToString());
+                Console.WriteLine(item.Value.ToShortString());
             }
         }
 

@@ -36,5 +36,13 @@ namespace Notebook
             fieldsValidation.Add("Id", new Validation(true, 1, 10, numbers.ToArray()));
         }
 
+        public override string ToString()
+        {
+             return $"\n\tID: {Id}\n\tФамилия: {Surname}\n\tИмя: {Name}\n\tОтчество: {SecondName}\n\tНомер телефона: {Phone}\n\tСтрана: {Country}\n\tДата рождения: {DateOfBirth}\n\tОрганизация: {Organization}\n\tДолжность: {Position}\n\tПримечание: {Remark}";
+        }
+        public string ToShortString()
+        {
+            return $"{Id} {Surname} {Name} {Phone}";
+        }
     }
 }
