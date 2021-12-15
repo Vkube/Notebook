@@ -1,4 +1,6 @@
-﻿namespace Notebook
+﻿using System.Linq;
+
+namespace Notebook
 {
     public class Validation
     {
@@ -15,6 +17,48 @@
             MinLength = minValue;
             MaxLength = maxValue;
             ValidSymbols = symbols;
+        }
+
+        public bool TryValidate(string validation, out string error)
+        {
+
+
+            if (string.IsNullOrWhiteSpace(validation) || string.IsNullOrEmpty(validation))
+            {
+                if (Required)
+                {
+                    error = "Это поле является обязательным!";
+                    return false;
+                }
+                else
+                {
+                    error = null;
+                    return true;
+                }
+            }
+
+            if (validation.Length < MinLength)
+            {
+                error = "Минимальная длина: " + MinLength + "!";
+                return false;
+            }
+
+            if (validation.Length > MaxLength)
+            {
+                error = "Максимальная длина: " + MaxLength + "!";
+                return false;
+            }
+
+            foreach (var item in validation)
+            {
+                if (!ValidSymbols.Contains(item))
+                {
+                    error = "Используйте только: " + new string(ValidSymbols) + "!";
+                    return false;
+                }
+            }
+            error = null;
+            return true;
         }
     }
 }

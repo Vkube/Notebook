@@ -125,6 +125,22 @@ namespace Notebook
             }
         }
 
-
+        private string ReadUntilValidationPass(string propertyName)
+        {
+            while (true)
+            {
+                Console.Write($"Введите {propertyName}: ");
+                string tmp = Console.ReadLine();
+                string err;
+                if (Note.fieldsValidation[propertyName].TryValidate(tmp, out err))
+                {
+                    return tmp;
+                }
+                else
+                {
+                    Console.WriteLine(err);
+                }
+            }
+        }
     }
 }
