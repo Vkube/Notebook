@@ -12,12 +12,13 @@ namespace Notebook
 
     public class Notebook
     {
+        private static int notesCount = 0;
         public Dictionary<int, Note> allNotes = new Dictionary<int, Note>();
         public static void Main(string[] args)
         {
 
-            //var a = new Notebook();
-            //a.Action();
+            var a = new Notebook();
+            a.Action();
 
 
         }
@@ -71,11 +72,58 @@ namespace Notebook
         }
 
 
-        private void createNote()
+        private void CreateNote()
+        {
+            Note note = new Note();
+            note.Id = allNotes.Count;
+            allNotes.Add(note.Id, note);
+            notesCount++;
+        }
+
+        private void ReadNote()
+        {
+            Console.Write("Введите Id записи: ");
+            string stringId = Console.ReadLine();
+            bool result = int.TryParse(stringId, out int intId);
+            if (result)
+            {
+                if (allNotes.ContainsKey(intId)) Console.WriteLine(allNotes[intId]);
+                else Console.WriteLine("Данной записи не найдено!");
+            }
+            else Console.WriteLine("Введен некорректный идентификатор!");
+        }
+
+        private void UpdateNote()
         {
 
         }
 
+
+        private void DeleteNote()
+        {
+            Console.Write("Введите Id записи для удаления: ");
+            string stringId = Console.ReadLine();
+            bool result = int.TryParse(stringId, out int intId);
+            if (result)
+            {
+                if (allNotes.ContainsKey(intId))
+                {
+                    allNotes.Remove(intId);
+                    Console.WriteLine($"Запись {intId} удалена!");
+                }
+                else Console.WriteLine("Данной записи не найдено!");
+            }
+            else Console.WriteLine("Введен некорректный идентификатор!");
+        }
+
+
+        private void ShowAllNotes()
+        {
+            foreach (KeyValuePair<int, Note> item in allNotes)
+            {
+                Console.WriteLine(item.Value.ToString());
+            }
+        }
 
 
     }
