@@ -76,6 +76,37 @@ namespace Notebook
         {
             Note note = new Note();
             note.Id = allNotes.Count;
+          
+
+
+            note.Surname = ReadUntilValidationPass("Surname");
+            note.Name = ReadUntilValidationPass("Name");
+
+            note.SecondName = ReadUntilValidationPass("SecondName");
+            if (String.IsNullOrWhiteSpace(note.SecondName))
+                note.SecondName = null;
+
+            note.Phone = ReadUntilValidationPass("Phone");
+            note.Country = ReadUntilValidationPass("Country");
+            if (String.IsNullOrWhiteSpace(note.Country))
+                note.Country = null;
+
+            note.DateOfBirth = ReadUntilValidationPass("DateOfBirth");
+            if (String.IsNullOrWhiteSpace(note.DateOfBirth))
+                note.DateOfBirth = null;
+
+            note.Organization = ReadUntilValidationPass("Organization");
+            if (String.IsNullOrWhiteSpace(note.Organization))
+                note.Organization = null;
+
+            note.Position = ReadUntilValidationPass("Position");
+            if (String.IsNullOrWhiteSpace(note.Position))
+                note.Position = null;
+
+            note.Remark = ReadUntilValidationPass("Remark");
+            if (String.IsNullOrWhiteSpace(note.Remark))
+                note.Remark = null;
+
             allNotes.Add(note.Id, note);
             notesCount++;
         }
@@ -87,10 +118,13 @@ namespace Notebook
             bool result = int.TryParse(stringId, out int intId);
             if (result)
             {
-                if (allNotes.ContainsKey(intId)) Console.WriteLine(allNotes[intId]);
-                else Console.WriteLine("Данной записи не найдено!");
+                if (allNotes.ContainsKey(intId))
+                    Console.WriteLine(allNotes[intId]);
+                else
+                    Console.WriteLine("Данной записи не найдено!");
             }
-            else Console.WriteLine("Введен некорректный идентификатор!");
+            else
+                Console.WriteLine("Введен некорректный идентификатор!");
         }
 
         private void UpdateNote()
@@ -111,9 +145,11 @@ namespace Notebook
                     allNotes.Remove(intId);
                     Console.WriteLine($"Запись {intId} удалена!");
                 }
-                else Console.WriteLine("Данной записи не найдено!");
+                else 
+                    Console.WriteLine("Данной записи не найдено!");
             }
-            else Console.WriteLine("Введен некорректный идентификатор!");
+            else 
+                Console.WriteLine("Введен некорректный идентификатор!");
         }
 
 
