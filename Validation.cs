@@ -1,4 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Notebook
 {
@@ -9,56 +13,55 @@ namespace Notebook
         public int MaxLength { get; set; }
         public char[] ValidSymbols { get; set; }
 
-
-
-        public Validation(bool isRequare, int minValue, int maxValue, char[] symbols)
+        public Validation(bool required, int minLength, int maxLength, char[] validSymbols)
         {
-            Required = isRequare;
-            MinLength = minValue;
-            MaxLength = maxValue;
-            ValidSymbols = symbols;
+            this.Required = required;
+            this.MinLength = minLength;
+            this.MaxLength = maxLength;
+            this.ValidSymbols = validSymbols;
         }
 
-        public bool TryValidate(string validation, out string error)
+        public bool TryValidate(string input, out string output)
         {
-
-
-            if (string.IsNullOrWhiteSpace(validation) || string.IsNullOrEmpty(validation))
+            if (string.IsNullOrEmpty(input) || string.IsNullOrWhiteSpace(input))
             {
                 if (Required)
                 {
-                    error = "Это поле является обязательным!";
+                    output = "Это поле является обязательным!";
                     return false;
                 }
                 else
                 {
-                    error = null;
+                    output = null;
                     return true;
                 }
             }
-
-            if (validation.Length < MinLength)
+            if (input.Length < MinLength)
             {
-                error = "Минимальная длина: " + MinLength + "!";
+                output = $"Минимальная длина: {MinLength}!";
                 return false;
             }
 
-            if (validation.Length > MaxLength)
+            if (input.Length > MaxLength)
             {
-                error = "Максимальная длина: " + MaxLength + "!";
+                output = $"Максимальная длина: {MaxLength}!";
                 return false;
             }
 
-            foreach (var item in validation)
+            input = input.ToLower();
+            foreach (var item in input)
             {
+
                 if (!ValidSymbols.Contains(item))
                 {
-                    error = "Используйте только: " + new string(ValidSymbols) + "!";
+                    output = $"Используйте только: {new string(ValidSymbols)}!";
                     return false;
                 }
             }
-            error = null;
+
+            output = null;
             return true;
         }
+
     }
 }

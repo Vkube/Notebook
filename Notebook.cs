@@ -12,171 +12,221 @@ namespace Notebook
 
     public class Notebook
     {
-        private static int notesCount = 0;
         public Dictionary<int, Note> allNotes = new Dictionary<int, Note>();
+        private int count = 0;
         public static void Main(string[] args)
         {
-
-            var a = new Notebook();
-            a.Action();
+            Notebook n = new Notebook();
+            n.Action();
 
 
         }
-
 
         private static void Greetings()
         {
-            Console.WriteLine("Добро пожаловать в нашу записную книжку!\n" +
-                "\t- для создания новой записи введите команду: create.\n" +
-                "\t- для просмотра записи введите команду: show.\n" +
-                "\t- для редактирования записи введите команду: edit.\n" +
-                "\t- для удаления записи введите команду: del.\n" +
-                "\t- для просмотра списка всех записей введите команду: all.\n" +
-                "\t- для выхода из программы введите команду: exit.\n");
+            Console.WriteLine("Добро пожаловать в нашу записную книжку!");
+            Console.WriteLine("\t- для создания новой записи введите команду: create.");
+            Console.WriteLine("\t- для просмотра записи введите команду: show.");
+            Console.WriteLine("\t- для редактирования записи введите команду: edit.");
+            Console.WriteLine("\t- для удаления записи введите команду: del.");
+            Console.WriteLine("\t- для просмотра списка всех записей введите команду: all.");
+            Console.WriteLine("\t- для выхода из программы введите команду: exit.");
         }
-
 
         private void Action()
         {
-            Console.Write("Введите команду: ");
-            string inCommand = Console.ReadLine(); ;
-            while (inCommand != "create" && inCommand != "show" && inCommand != "edit" && inCommand != "del" && inCommand != "all" && inCommand != "exit")
+            Greetings();
+
+            while (true)
             {
-                Console.Clear();
-                Console.Write("Данной команды не найдено! Попробуйте ещё раз: ");
-                inCommand = Console.ReadLine();
-            }
-            switch (inCommand)
-            {
-                case "create":
-                    Console.WriteLine("Создание");
+                Console.Write("Введите команду: ");
+                string option = Console.ReadLine();
+                switch (option)
+                {
+                    case "create":
+                        CreateNote();
+                        break;
+                    case "show":
+                        ReadNote();
+                        break;
+                    case "edit":
+                        UpdateNote();
+                        break;
+                    case "del":
+                        DeleteNote();
+                        break;
+                    case "all":
+                        ShowAllNotes();
+                        break;
+                    case "exit":
+                        Console.WriteLine("Пока-пока!");
+                        break;
+                    default:
+                        Console.Clear();
+                        Console.Write("Данной команды не найдено! Попробуйте ещё раз: ");
+                        break;
+                }
+                if (option == "exit")
+                {
                     break;
-                case "show":
-                    Console.WriteLine("Показ");
-                    break;
-                case "edit":
-                    Console.WriteLine("Редактирование");
-                    break;
-                case "del":
-                    Console.WriteLine("Удаление");
-                    break;
-                case "all":
-                    Console.WriteLine("Всё");
-                    break;
-                case "exit":
-                    Console.WriteLine("Выход");
-                    break;
-                default:
-                    break;
+                }
             }
         }
 
-
         private void CreateNote()
         {
-            Note note = new Note();
-            note.Id = allNotes.Count;
-          
-
-
+            Note note = new Note() { Id = count };
             note.Surname = ReadUntilValidationPass("Surname");
             note.Name = ReadUntilValidationPass("Name");
-
             note.SecondName = ReadUntilValidationPass("SecondName");
-            if (String.IsNullOrWhiteSpace(note.SecondName))
-                note.SecondName = null;
-
             note.Phone = ReadUntilValidationPass("Phone");
             note.Country = ReadUntilValidationPass("Country");
-            if (String.IsNullOrWhiteSpace(note.Country))
-                note.Country = null;
-
             note.DateOfBirth = ReadUntilValidationPass("DateOfBirth");
-            if (String.IsNullOrWhiteSpace(note.DateOfBirth))
-                note.DateOfBirth = null;
-
             note.Organization = ReadUntilValidationPass("Organization");
-            if (String.IsNullOrWhiteSpace(note.Organization))
-                note.Organization = null;
-
             note.Position = ReadUntilValidationPass("Position");
-            if (String.IsNullOrWhiteSpace(note.Position))
-                note.Position = null;
-
             note.Remark = ReadUntilValidationPass("Remark");
-            if (String.IsNullOrWhiteSpace(note.Remark))
-                note.Remark = null;
-
-            allNotes.Add(note.Id, note);
-            notesCount++;
+            allNotes.Add(count, note);
+            count++;
         }
 
         private void ReadNote()
         {
             Console.Write("Введите Id записи: ");
-            string stringId = Console.ReadLine();
-            bool result = int.TryParse(stringId, out int intId);
-            if (result)
-            {
-                if (allNotes.ContainsKey(intId))
-                    Console.WriteLine(allNotes[intId]);
-                else
-                    Console.WriteLine("Данной записи не найдено!");
-            }
-            else
+            if (!int.TryParse(Console.ReadLine(), out int id))
                 Console.WriteLine("Введен некорректный идентификатор!");
+            else if (!allNotes.ContainsKey(id))
+                Console.WriteLine("Данной записи не найдено!");
+            else
+                Console.WriteLine(allNotes[id].ToString());
         }
 
         private void UpdateNote()
         {
+            Console.Write("Укажите ID записи для редактирования: ");
+            int redactID;
+            if (Int32.TryParse(Console.ReadLine(), out redactID))
+            {
+                if (!allNotes.ContainsKey(redactID))
+                    Console.WriteLine("Данной записи не найдено!");
+                else
+                {
+                    while (true)
+                    {
+                        Console.WriteLine(allNotes[redactID]);
+                        Console.WriteLine("Какое поле необходимо отредактировать?");
+                        Console.WriteLine("\t1 - Фамилия\n\t2 - Имя\n\t3 - Отчество\n\t4 - Телефон\n\t5 - Страна\n\t6 - Дата рождения\n\t7 - Организация\n\t8 - Должность\n\t9 - Примечание");
+                        Console.Write("Введите цифру для выбора или cancel для завершения редактирования: ");
+                        string comm = "";
+                        while (comm == "")
+                        {
+                            comm = Console.ReadLine();
+                            if (comm == "cancel")
+                                return;
+                            switch (comm)
+                            {
+                                case "1":
+                                    allNotes[redactID].Surname = ReadUntilValidationPass("Surname");
+                                    break;
+                                case "2":
+                                    allNotes[redactID].Name = ReadUntilValidationPass("Name");
+                                    break;
+                                case "3":
+                                    allNotes[redactID].SecondName = ReadUntilValidationPass("SecondName");
+                                    if (String.IsNullOrWhiteSpace(allNotes[redactID].SecondName)) allNotes[redactID].SecondName = null;
+                                    break;
+                                case "4":
+                                    allNotes[redactID].Phone = ReadUntilValidationPass("Phone");
+                                    break;
+                                case "5":
+                                    allNotes[redactID].Country = ReadUntilValidationPass("Country");
+                                    if (String.IsNullOrWhiteSpace(allNotes[redactID].Country)) allNotes[redactID].Country = null;
+                                    break;
+                                case "6":
+                                    allNotes[redactID].DateOfBirth = ReadUntilValidationPass("DateOfBirth");
+                                    if (String.IsNullOrWhiteSpace(allNotes[redactID].DateOfBirth)) allNotes[redactID].DateOfBirth = null;
+                                    break;
+                                case "7":
+                                    allNotes[redactID].Organization = ReadUntilValidationPass("Organization");
+                                    if (String.IsNullOrWhiteSpace(allNotes[redactID].Organization)) allNotes[redactID].Organization = null;
+                                    break;
+                                case "8":
+                                    if (String.IsNullOrWhiteSpace(allNotes[redactID].Position)) allNotes[redactID].Position = null;
+                                    allNotes[redactID].Remark = ReadUntilValidationPass("Remark");
+                                    break;
+                                case "9":
+                                    allNotes[redactID].Remark = ReadUntilValidationPass("Remark");
+                                    if (String.IsNullOrWhiteSpace(allNotes[redactID].Remark)) allNotes[redactID].Remark = null;
+                                    break;
+                                default:
+                                    Console.Write("Команда не найдена! Введите ещё раз: ");
+                                    comm = "";
+                                    break;
+                            }
+                        }
+                        Console.Write("Поле изменено! Продолжить редактирование записи? (yes/no): ");
+                        comm = Console.ReadLine();
+                        while (comm != "yes" && comm != "no")
+                        {
+                            Console.Write("Пожалуйста введите yes или no: ");
+                            comm = Console.ReadLine();
+                        }
 
+                        if (comm == "yes")
+                            Console.Clear();
+                        else
+                        {
+                            Console.Clear();
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("Введен некорректный идентификатор!");
+            }
         }
-
 
         private void DeleteNote()
         {
             Console.Write("Введите Id записи для удаления: ");
-            string stringId = Console.ReadLine();
-            bool result = int.TryParse(stringId, out int intId);
-            if (result)
-            {
-                if (allNotes.ContainsKey(intId))
-                {
-                    allNotes.Remove(intId);
-                    Console.WriteLine($"Запись {intId} удалена!");
-                }
-                else 
-                    Console.WriteLine("Данной записи не найдено!");
-            }
-            else 
+            if (!int.TryParse(Console.ReadLine(), out int id))
                 Console.WriteLine("Введен некорректный идентификатор!");
-        }
+            else if (!allNotes.ContainsKey(id))
+                Console.WriteLine("Данной записи не найдено!");
+            else
+            {
+                allNotes.Remove(id);
+                Console.WriteLine($"Запись {id} удалена!");
+            }
 
+        }
 
         private void ShowAllNotes()
         {
-            foreach (KeyValuePair<int, Note> item in allNotes)
+            foreach (var item in allNotes)
             {
                 Console.WriteLine(item.Value.ToShortString());
             }
         }
 
-        private string ReadUntilValidationPass(string propertyName)
+        private string ReadUntilValidationPass(string field)
         {
-            while (true)
+            Console.Write($"Введите {field}: ");
+            do
             {
-                Console.Write($"Введите {propertyName}: ");
-                string tmp = Console.ReadLine();
-                string err;
-                if (Note.fieldsValidation[propertyName].TryValidate(tmp, out err))
+                string input = Console.ReadLine();
+                if (Note.fieldsValidation[field].TryValidate(input, out string error))
                 {
-                    return tmp;
+                    if (string.IsNullOrEmpty(input))
+                        return null;
+                    else
+                        return input;
                 }
                 else
-                {
-                    Console.WriteLine(err);
-                }
+                    Console.WriteLine(error); ;
             }
+            while (true);
         }
     }
 }
